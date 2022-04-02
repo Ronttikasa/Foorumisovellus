@@ -2,7 +2,7 @@
 <html lang="fi">
 <head>
     <meta charset="UTF-8">
-    <title>Tsoha foorumi</title>
+    <title>GLC foorumi</title>
 </head>
 <body>
     {% if session.username %}
@@ -17,7 +17,7 @@
     
         <form action="/new_message" method="POST">
             <p>Uusi viesti:</p>
-            <textarea name="content" rows="5" cols="60"></textarea>
+            <textarea name="content" rows="5" cols="60" required maxlength="1000"></textarea>
             <br>
             <input type="submit" value="Lähetä">
         </form>

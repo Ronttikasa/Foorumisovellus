@@ -44,14 +44,14 @@ def register_user():
 @app.route("/new_message", methods=["POST"])
 def new_message():
     content = request.form["content"]
+    if not content or len(content) > 1000:
+        return redirect("/")
     user_id = session.get("user_id", 0)
     sql = "INSERT INTO messages (content, user_id, time) \
         VALUES (:content, :user_id, NOW())"
     db.session.execute(sql, {"content":content, "user_id":user_id})
     db.session.commit()
     return redirect("/")
-
-
 
 @app.route("/login", methods=["POST"])
 def login():
