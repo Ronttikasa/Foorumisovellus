@@ -44,7 +44,7 @@ def register_user():
 @app.route("/new_message", methods=["POST"])
 def new_message():
     content = request.form["content"]
-    if not content or len(content) > 1000:
+    if not content or len(content) > 1030:
         return redirect("/")
     user_id = session.get("user_id", 0)
     sql = "INSERT INTO messages (content, user_id, time) \
