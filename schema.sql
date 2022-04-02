@@ -4,3 +4,10 @@ CREATE TABLE users (
     password TEXT,
     role INTEGER
 );
+
+CREATE TABLE messages (
+    id SERIAL PRIMARY KEY,
+    content TEXT,
+    user_id INTEGER REFERENCES users,
+    time TIMESTAMP
+);

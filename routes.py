@@ -7,7 +7,11 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    sql = "SELECT M.content, U.username, M.time FROM messages M, users U " \
+        "WHERE M.user_id=U.id ORDER BY M.id"
+    result = db.session.execute(sql)
+    messages = result.fetchall()
+    return render_template("index.html", messages=messages)
 
 @app.route("/register")
 def register():
@@ -37,23 +41,37 @@ def register_user():
 
     return redirect("/")
 
+@app.route("/new_message", methods=["POST"])
+def new_message():
+    content = request.form["content"]
+    user_id = session.get("user_id", 0)
+    sql = "INSERT INTO messages (content, user_id, time) \
+        VALUES (:content, :user_id, NOW())"
+    db.session.execute(sql, {"content":content, "user_id":user_id})
+    db.session.commit()
+    return redirect("/")
+
+
+
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form["username"]
     password = request.form["password"]
 
-    sql = "SELECT password FROM users WHERE username=:name"
+    sql = "SELECT id, password FROM users WHERE username=:name"
     result = db.session.execute(sql, {"name": username})
     user = result.fetchone()
 
+    # TODO error messages in app
     if not user:
         print("käyttäjää ei löydy")
         return redirect("/")
-    if not check_password_hash(user[0], password):
+    if not check_password_hash(user[1], password):
         print("väärä salasana")
         return redirect("/")
 
     session["username"] = username
+    session["user_id"] = user[0]
     return redirect("/")
 
 @app.route("/logout")

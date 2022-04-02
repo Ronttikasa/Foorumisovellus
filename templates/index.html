@@ -1,9 +1,27 @@
 <!DOCTYPE html>
-<html>
-<title>Tsoha foorumi</title>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>Tsoha foorumi</title>
+</head>
+<body>
     {% if session.username %}
-        <p>Olet kirjautunut nimellä {{ session.username }}</p>
-        <a href="/logout">Kirjaudu ulos</a>
+        <p>Olet kirjautunut nimellä {{ session.username }}<br>
+        <a href="/logout">Kirjaudu ulos</a></p>
+        {% for message in messages %}
+            Lähettäjä: {{ message.username }} <br>
+            {{ message.content }} <br> 
+            {{ message.time.strftime("%Y-%m-%d %H:%M:%S") }} <br>
+            <hr>
+        {% endfor %}
+    
+        <form action="/new_message" method="POST">
+            <p>Uusi viesti:</p>
+            <textarea name="content" rows="5" cols="60"></textarea>
+            <br>
+            <input type="submit" value="Lähetä">
+        </form>
+
     {% else %}
         <h1>Tervetuloa</h1>
         <form action="/login" method="POST">
@@ -16,4 +34,5 @@
         </form>
         Tai <a href="/register">luo uusi tunnus</a>
     {% endif %}
+</body>
 </html>
