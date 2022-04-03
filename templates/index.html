@@ -20,6 +20,7 @@
             <textarea name="content" rows="5" cols="60" required maxlength="1000"></textarea>
             <br>
             <input type="submit" value="Lähetä">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
 
     {% else %}

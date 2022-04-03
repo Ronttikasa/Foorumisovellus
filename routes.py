@@ -2,6 +2,7 @@ from app import app
 from db import db
 from flask import render_template, request, redirect, session
 from werkzeug.security import check_password_hash, generate_password_hash
+from secrets import token_hex
 
 
 
@@ -43,6 +44,8 @@ def register_user():
 
 @app.route("/new_message", methods=["POST"])
 def new_message():
+    if not session["csrf_token"] == request.form["csrf_token"]:
+        abort(403)
     content = request.form["content"]
     if not content or len(content) > 1030:
         return redirect("/")
@@ -72,6 +75,7 @@ def login():
 
     session["username"] = username
     session["user_id"] = user[0]
+    session["csrf_token"] = token_hex(16)
     return redirect("/")
 
 @app.route("/logout")
