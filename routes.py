@@ -1,9 +1,7 @@
 from app import app
 from db import db
 from flask import render_template, request, redirect, session
-from werkzeug.security import check_password_hash, generate_password_hash
-from secrets import token_hex
-
+import users
 
 
 @app.route("/")
@@ -20,26 +18,18 @@ def register():
 
 @app.route("/register_user", methods=["POST"])
 def register_user():
-    username = request.form["username"]
+    username = request.form["username"].strip()
     password = request.form["password"]
     password_again = request.form["password_again"]
     role = 1
-    
-    # TODO username already exists (error handling)
-    # TODO error messages in app
-    if not username or len(username) > 20:
-        print("käyttäjätunnus ei kelpaa")
-    elif not password == password_again:
-        print("salasanat eroavat")
-    elif len(password) < 8:
-        print("salasana liian lyhyt")
-    else:
-        password_hash = generate_password_hash(password)
-        sql = "INSERT INTO users (username, password, role) \
-            VALUES (:name, :password, :role)"
-        db.session.execute(sql, {"name": username, "password": password_hash, "role":role})
-        db.session.commit()        
 
+    error_message = users.registration_error(username, password, password_again)
+    if error_message:
+        return render_template("error.html", message=error_message)
+
+    if not users.register(username, password, role):
+        return render_template("error.html", message="Käyttäjätunnus on jo käytössä.")     
+    
     return redirect("/")
 
 @app.route("/new_message", methods=["POST"])
@@ -61,21 +51,9 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
 
-    sql = "SELECT id, password FROM users WHERE username=:name"
-    result = db.session.execute(sql, {"name": username})
-    user = result.fetchone()
+    if not users.login(username, password):
+        return render_template("error.html", message="Väärä käyttäjätunnus tai salasana.")
 
-    # TODO error messages in app
-    if not user:
-        print("käyttäjää ei löydy")
-        return redirect("/")
-    if not check_password_hash(user[1], password):
-        print("väärä salasana")
-        return redirect("/")
-
-    session["username"] = username
-    session["user_id"] = user[0]
-    session["csrf_token"] = token_hex(16)
     return redirect("/")
 
 @app.route("/logout")
