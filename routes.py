@@ -21,13 +21,12 @@ def register_user():
     username = request.form["username"].strip()
     password = request.form["password"]
     password_again = request.form["password_again"]
-    role = 1
 
-    error_message = users.registration_error(username, password, password_again)
-    if error_message:
+    credentials_ok, error_message = users.check_credentials(username, password, password_again)
+    if not credentials_ok:
         return render_template("error.html", message=error_message)
 
-    if not users.register(username, password, role):
+    if not users.register(username, password):
         return render_template("error.html", message="Käyttäjätunnus on jo käytössä.")     
     
     return redirect("/")

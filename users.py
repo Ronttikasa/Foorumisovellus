@@ -19,19 +19,19 @@ def login(username, password):
 
     return True
 
-def register(username, password, role):
+def register(username, password):
     try:
         password_hash = generate_password_hash(password)
-        sql = "INSERT INTO users (username, password, role) \
-            VALUES (:name, :password, :role)"
-        db.session.execute(sql, {"name": username, "password": password_hash, "role":role})
+        sql = "INSERT INTO users (username, password) \
+            VALUES (:name, :password)"
+        db.session.execute(sql, {"name": username, "password": password_hash})
         db.session.commit()   
     except Exception:
         return False
     return login(username, password)
 
 
-def registration_error(username, password, password_again):
+def check_credentials(username, password, password_again):
     message = ""
     if not username or len(username) > 20:
         message += "Käyttäjätunnuksessa tulee olla 1-20 merkkiä. "
@@ -39,4 +39,6 @@ def registration_error(username, password, password_again):
         message += "Salasanat eivät ole samat. "
     if len(password) < 8:
         message += "Salasana on liian lyhyt."
-    return message
+    if not message:
+        return True, None
+    return False, message
