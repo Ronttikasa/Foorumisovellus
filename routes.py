@@ -18,7 +18,7 @@ def category(id):
     sql = "SELECT id, header FROM threads WHERE category_id=:id"
     result = db.session.execute(sql, {"id":id})
     threads = result.fetchall()
-    return render_template("category.html", threads=threads)
+    return render_template("category.html", threads=threads, category_id=id)
 
 
 # TODO
@@ -62,6 +62,31 @@ def new_message():
     db.session.execute(sql, {"content":content, "user_id":user_id})
     db.session.commit()
     return redirect("/")
+
+@app.route("/new_thread", methods=["POST"])
+def new_thread():
+    if not session["csrf_token"] == request.form["csrf_token"]:
+        abort(403)
+    header = request.form["header"]
+    content = request.form["content"]
+    category_id = request.form["category_id"]
+    user_id = session.get("user_id", 0)
+
+    sql = "INSERT INTO threads (header, category_id) \
+        VALUES (:header, :category)"
+    db.session.execute(sql, {"header":header, "category":category_id})
+    
+    sql = "SELECT MAX(id) FROM threads"
+    thread_id = db.session.execute(sql).fetchone()[0]
+
+    sql = "INSERT INTO messages (content, user_id, thread, first_in_thread, time) \
+        VALUES (:content, :user_id, :thread_id, TRUE, NOW())"
+    db.session.execute(sql, {"content":content, "user_id":user_id, "thread_id":thread_id})
+    db.session.commit()
+
+    return category(category_id)
+
+
 
 @app.route("/login", methods=["POST"])
 def login():

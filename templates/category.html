@@ -11,6 +11,15 @@
             {{ thread.header }} <br>
             <hr>
         {% endfor %}
+
+        <form action="/new_thread" method="POST">
+            <p>Uusi keskustelu:</p>
+            <p><input type="text" name="header" required maxlength="50"></p>
+            <p><textarea name="content" rows="5" cols="60" required maxlength="1000"></textarea></p>
+            <input type="submit" value="Lähetä">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <input type="hidden" name="category_id" value="{{ category_id }}">
+        </form>
     
     {% else %}
         <h1>Tervetuloa</h1>
