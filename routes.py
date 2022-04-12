@@ -84,7 +84,7 @@ def new_thread():
     db.session.execute(sql, {"content":content, "user_id":user_id, "thread_id":thread_id})
     db.session.commit()
 
-    return category(category_id)
+    return redirect("/category/"+str(category_id))
 
 
 
