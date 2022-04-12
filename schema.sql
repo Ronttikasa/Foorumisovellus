@@ -4,24 +4,24 @@ CREATE TABLE users (
     password TEXT
 );
 
-CREATE TABLE messages (
+CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
-    content TEXT,
-    user_id INTEGER REFERENCES users,
-    thread INTEGER REFERENCES threads,
-    time TIMESTAMP
+    category_name TEXT
 );
 
 CREATE TABLE threads (
     id SERIAL PRIMARY KEY,
     header TEXT,
-    category_id INTEGER REFERENCES categories,
-    first_msg_id INTEGER REFERENCES messages
+    category_id INTEGER REFERENCES categories
 );
 
-CREATE TABLE categories (
+CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
-    category_name TEXT
+    content TEXT,
+    user_id INTEGER REFERENCES users,
+    thread INTEGER REFERENCES threads,
+    first_in_thread BOOLEAN,
+    time TIMESTAMP
 );
 
 CREATE TABLE groups (
