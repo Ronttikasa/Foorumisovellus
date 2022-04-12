@@ -6,10 +6,20 @@ import users
 
 @app.route("/")
 def index():
-    sql = "SELECT category_name FROM categories"
+    sql = "SELECT id, category_name FROM categories"
     result = db.session.execute(sql)
     categories = result.fetchall()
     return render_template("index.html", categories=categories)
+
+@app.route("/category/<int:id>")
+def category(id):
+    # TODO: check if user has the privilege to view category
+    
+    sql = "SELECT id, header FROM threads WHERE category_id=:id"
+    result = db.session.execute(sql, {"id":id})
+    threads = result.fetchall()
+    return render_template("category.html", threads=threads)
+
 
 # TODO
 @app.route("/view_thread")
