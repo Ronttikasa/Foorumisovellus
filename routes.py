@@ -1,16 +1,24 @@
 from app import app
 from db import db
-from flask import render_template, request, redirect, session
+from flask import render_template, request, redirect, session, abort
 import users
 
 
 @app.route("/")
 def index():
+    sql = "SELECT category_name FROM categories"
+    result = db.session.execute(sql)
+    categories = result.fetchall()
+    return render_template("index.html", categories=categories)
+
+# TODO
+@app.route("/view_thread")
+def view_thread():
     sql = "SELECT M.content, U.username, M.time FROM messages M, users U " \
         "WHERE M.user_id=U.id ORDER BY M.id"
     result = db.session.execute(sql)
     messages = result.fetchall()
-    return render_template("index.html", messages=messages)
+    return render_template("index.html", messages=messages)    
 
 @app.route("/register")
 def register():

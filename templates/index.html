@@ -6,22 +6,11 @@
 </head>
 <body>
     {% if session.username %}
-        <p>Olet kirjautunut nimellä {{ session.username }}<br>
-        <a href="/logout">Kirjaudu ulos</a></p>
-        {% for message in messages %}
-            Lähettäjä: {{ message.username }} <br>
-            {{ message.content }} <br> 
-            {{ message.time.strftime("%Y-%m-%d %H:%M:%S") }} <br>
+        <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
+        {% for category in categories %}
+            {{ category.category_name }} <br>
             <hr>
         {% endfor %}
-    
-        <form action="/new_message" method="POST">
-            <p>Uusi viesti:</p>
-            <textarea name="content" rows="5" cols="60" required maxlength="1000"></textarea>
-            <br>
-            <input type="submit" value="Lähetä">
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-        </form>
 
     {% else %}
         <h1>Tervetuloa</h1>
