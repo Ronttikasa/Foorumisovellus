@@ -7,22 +7,26 @@
 <body>
     {% if session.username %}
         <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
-        <p><a href="/">Etusivu</a></p>
-        <h2>Alueen keskustelut</h2>
-        {% for thread in threads %}
-            <a href="/thread/{{ thread.id }}">{{ thread.header }}</a><br>
+        <p><a href="/">Etusivu</a> | <a href="/category/{{ header_data.id }}">{{ header_data.category_name }}</a></p>
+
+        <h2>{{ header_data.header }}</h2>
+
+        {% for message in messages %}
+            Lähettäjä: {{ message.username }} <br>
+            {{ message.content }} <br> 
+            {{ message.time.strftime("%Y-%m-%d %H:%M:%S") }} <br>
             <hr>
         {% endfor %}
-
-        <form action="/new_thread" method="POST">
-            <p>Uusi keskustelu:</p>
-            <p><input type="text" name="header" required maxlength="100"></p>
-            <p><textarea name="content" rows="5" cols="60" required maxlength="5000"></textarea></p>
+    
+        <form action="/new_message" method="POST">
+            <p>Uusi viesti:</p>
+            <textarea name="content" rows="5" cols="60" required maxlength="5000"></textarea>
+            <br>
             <input type="submit" value="Lähetä">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-            <input type="hidden" name="category_id" value="{{ category_id }}">
+            <input type="hidden" name="thread_id" value="{{ thread_id }}">
         </form>
-    
+
     {% else %}
         <h1>Tervetuloa</h1>
         <form action="/login" method="POST">

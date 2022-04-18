@@ -19,7 +19,7 @@ CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
     content TEXT NOT NULL,
     user_id INTEGER REFERENCES users,
-    thread INTEGER REFERENCES threads,
+    thread_id INTEGER REFERENCES threads,
     first_in_thread BOOLEAN NOT NULL,
     time TIMESTAMP
 );
