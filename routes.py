@@ -15,14 +15,14 @@ def index():
 def category(id):
     # TODO: check if user has the privilege to view category
     
+    name = messages.get_category_name(id)
     threads = messages.get_threads(id)
 
-    return render_template("category.html", threads=threads, category_id=id)
+    return render_template("category.html", threads=threads, cat_id=id, cat_name=name)
 
 @app.route("/thread/<int:id>")
 def thread(id):
     header_data = messages.get_header_data(id)
-
     msgs = messages.get_messages(id)
 
     return render_template("thread.html", messages=msgs, thread_id=id, header_data=header_data)

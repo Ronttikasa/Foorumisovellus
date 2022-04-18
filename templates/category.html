@@ -8,7 +8,7 @@
     {% if session.username %}
         <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
         <p><a href="/">Etusivu</a></p>
-        <h2>Alueen keskustelut</h2>
+        <h2>{{ cat_name }}</h2>
         {% for thread in threads %}
             <a href="/thread/{{ thread.id }}">{{ thread.topic }}</a><br>
             <hr>
@@ -20,7 +20,7 @@
             <p>Viesti: <textarea name="content" rows="5" cols="60" required maxlength="5000"></textarea></p>
             <input type="submit" value="Lähetä">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-            <input type="hidden" name="category_id" value="{{ category_id }}">
+            <input type="hidden" name="category_id" value="{{ cat_id }}">
         </form>
     
     {% else %}

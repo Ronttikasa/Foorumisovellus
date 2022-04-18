@@ -6,6 +6,11 @@ def get_categories():
     result = db.session.execute(sql)
     return result.fetchall()
 
+def get_category_name(category_id: int):
+    sql = "SELECT category_name FROM categories WHERE id=:id"
+    result = db.session.execute(sql, {"id": category_id})
+    return result.fetchone()[0]
+
 def get_threads(category_id: int):
     sql = "SELECT id, topic FROM threads WHERE category_id=:id AND visible=True"
     result = db.session.execute(sql, {"id":category_id})
