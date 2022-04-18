@@ -9,7 +9,7 @@
         <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
         <p><a href="/">Etusivu</a> | <a href="/category/{{ header_data.id }}">{{ header_data.category_name }}</a></p>
 
-        <h2>{{ header_data.header }}</h2>
+        <h2>{{ header_data.topic }}</h2>
 
         {% for message in messages %}
             Lähettäjä: {{ message.username }} <br>

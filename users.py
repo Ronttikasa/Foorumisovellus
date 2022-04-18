@@ -2,6 +2,7 @@ from db import db
 from flask import abort, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from secrets import token_hex
+from sqlalchemy.exc import IntegrityError
 
 def login(username, password):
     sql = "SELECT id, password FROM users WHERE username=:name"
@@ -22,14 +23,13 @@ def login(username, password):
 def register(username, password):
     try:
         password_hash = generate_password_hash(password)
-        sql = "INSERT INTO users (username, password) \
-            VALUES (:name, :password)"
+        sql = "INSERT INTO users (username, password, visible) \
+            VALUES (:name, :password, True)"
         db.session.execute(sql, {"name": username, "password": password_hash})
-        db.session.commit()   
-    except Exception:
+        db.session.commit()
+    except IntegrityError:
         return False
-    return login(username, password)
-
+    return True
 
 def check_credentials(username, password, password_again):
     message = ""
