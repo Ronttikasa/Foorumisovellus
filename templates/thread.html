@@ -15,7 +15,7 @@
             Lähettäjä: {{ message.username }} <br>
             {{ message.content }} <br> 
             {{ message.time.strftime("%Y-%m-%d %H:%M:%S") }}
-            {% if session.user_id == message.user_id %}
+            {% if session.user_id == message.user_id and not message.first_in_thread %}
                 <form action="/delete" method="POST"><input type="submit" value="poista viesti">
                     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                     <input type="hidden" name="msg_id" value="{{ message.id }}">

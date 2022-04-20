@@ -68,7 +68,10 @@ def delete_message():
     thread_id = request.form["thread_id"]
 
     if session["user_id"] == user_id:
-        messages.delete_message(message_id)
+        msg_deleted = messages.delete_message(message_id)
+
+    if not msg_deleted:
+        return render_template("error.html", message="Lol yritit nokkelasti poistaa ketjun ensimmäisen viestin mutta etpä voi :P")
 
     return redirect("/thread/"+str(thread_id))
 

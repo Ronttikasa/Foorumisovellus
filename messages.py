@@ -23,8 +23,8 @@ def get_header_data(thread_id: int):
     return result.fetchone()
 
 def get_messages(thread_id: int):
-    sql = "SELECT M.id, M.content, U.username, U.id AS user_id, M.time FROM messages M, users U " \
-        "WHERE M.thread_id=:id AND M.user_id=U.id AND M.visible=True ORDER BY M.id"
+    sql = "SELECT M.id, M.content, U.username, U.id AS user_id, M.time, M.first_in_thread \
+        FROM messages M, users U WHERE M.thread_id=:id AND M.user_id=U.id AND M.visible=True ORDER BY M.id"
     result = db.session.execute(sql, {"id":thread_id})
     return result.fetchall()
 
@@ -61,9 +61,10 @@ def new_thread(content: str, topic: str, category_id: int):
     return True
 
 def delete_message(msg_id: int):
-    sql = "UPDATE messages SET visible=False WHERE id=:id"
-    db.session.execute(sql, {"id":msg_id})
+    sql = "UPDATE messages SET visible=False WHERE id=:id AND first_in_thread=False"
+    result = db.session.execute(sql, {"id":msg_id})
     db.session.commit()
+    return result.rowcount
 
 def get_newest_message_category(category_id: int):
     sql = "SELECT M.id, M.time FROM messages M, threads T \
