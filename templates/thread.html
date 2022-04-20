@@ -14,7 +14,15 @@
         {% for message in messages %}
             Lähettäjä: {{ message.username }} <br>
             {{ message.content }} <br> 
-            {{ message.time.strftime("%Y-%m-%d %H:%M:%S") }} <br>
+            {{ message.time.strftime("%Y-%m-%d %H:%M:%S") }}
+            {% if session.user_id == message.user_id %}
+                <form action="/delete" method="POST"><input type="submit" value="poista viesti">
+                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                    <input type="hidden" name="msg_id" value="{{ message.id }}">
+                    <input type="hidden" name="user_id" value="{{ message.user_id }}">
+                    <input type="hidden" name="thread_id" value="{{ thread_id }}">
+                </form>
+            {% endif %}
             <hr>
         {% endfor %}
     

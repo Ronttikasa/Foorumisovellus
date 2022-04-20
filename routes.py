@@ -58,6 +58,21 @@ def new_thread():
 
     return redirect("/category/"+str(category_id))
 
+@app.route("/delete", methods=["POST"])
+def delete_message():
+    if not session["csrf_token"] == request.form["csrf_token"]:
+        abort(403)
+    
+    message_id = request.form["msg_id"]
+    user_id = int(request.form["user_id"])
+    thread_id = request.form["thread_id"]
+
+    if session["user_id"] == user_id:
+        messages.delete_message(message_id)
+
+    return redirect("/thread/"+str(thread_id))
+
+
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
