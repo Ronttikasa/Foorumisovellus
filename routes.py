@@ -71,7 +71,8 @@ def delete_message():
         msg_deleted = messages.delete_message(message_id)
 
     if not msg_deleted:
-        return render_template("error.html", message="Lol yritit nokkelasti poistaa ketjun ensimmäisen viestin mutta etpä voi :P")
+        return render_template("error.html",
+            message="Lol yritit nokkelasti poistaa ketjun ensimmäisen viestin mutta etpä voi :P")
 
     return redirect("/thread/"+str(thread_id))
 
@@ -110,7 +111,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    del session["username"]
+    users.logout()
     return redirect("/")
 
     

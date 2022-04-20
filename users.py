@@ -5,7 +5,8 @@ from secrets import token_hex
 from sqlalchemy.exc import IntegrityError
 
 def login(username, password):
-    sql = "SELECT id, password FROM users WHERE username=:name"
+    sql = "SELECT U.id, U.password, G.group_id FROM users U, users_in_groups G \
+        WHERE U.username=:name AND U.id=G.user_id ORDER BY G.group_id ASC LIMIT 1"
     result = db.session.execute(sql, {"name": username})
     user = result.fetchone()
 
@@ -16,9 +17,16 @@ def login(username, password):
 
     session["username"] = username
     session["user_id"] = user[0]
+    session["role"] = user[2]
     session["csrf_token"] = token_hex(16)
 
     return True
+
+def logout():
+    del session["username"]
+    del session["user_id"]
+    del session["role"]
+    del session["csrf_token"]
 
 def register(username, password):
     try:
@@ -26,6 +34,12 @@ def register(username, password):
         sql = "INSERT INTO users (username, password, visible) \
             VALUES (:name, :password, True)"
         db.session.execute(sql, {"name": username, "password": password_hash})
+
+        user_id = db.session.execute("SELECT id FROM users ORDER BY id DESC LIMIT 1").fetchone()[0]
+
+        sql = "INSERT INTO users_in_groups (user_id, group_id, visible) \
+            VALUES (:user_id, 2, True)"
+        db.session.execute(sql, {"user_id": user_id})
         db.session.commit()
     except IntegrityError:
         return False
