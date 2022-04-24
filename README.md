@@ -16,6 +16,9 @@ Sovellus on testattavissa [Herokussa](https://glc-foorumi.herokuapp.com/).
 
 Sovellukseen voi luoda uuden peruskäyttäjän testausta varten, ylläpitäjätoimintoja voi testata tunnuksilla `testiadmin`/`admin321`
 
+Tiedossa olevat puutteet:
+- Sovelluksen backend ei vielä tarkista käyttäjän oikeutta katsella tiettyä huonetta/ketjua
+
 ## Backlog
 
 Suunnitellut keskeiset toiminnot:
