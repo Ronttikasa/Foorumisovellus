@@ -12,7 +12,7 @@ Toteutetut ominaisuudet:
 - Ylläpitäjä voi luoda uusia huoneita
 - Ylläpitäjä voi luoda vain ylläpitäjille näkyvän huoneen
 
-Sovellusta on testattavissa [Herokussa](https://glc-foorumi.herokuapp.com/).
+Sovellus on testattavissa [Herokussa](https://glc-foorumi.herokuapp.com/).
 
 Sovellukseen voi luoda uuden peruskäyttäjän testausta varten, ylläpitäjätoimintoja voi testata tunnuksilla `testiadmin`/`admin321`
 
