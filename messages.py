@@ -1,8 +1,9 @@
 from db import db
-from flask import abort, request, session
+from flask import session
 
 def get_categories():
-    sql = "SELECT id, category_name FROM categories WHERE visible=True"
+    sql = "SELECT C.id, C.category_name, A.group_id FROM categories C, category_access A \
+        WHERE C.visible=True AND A.visible=True AND A.category_id=C.id"
     result = db.session.execute(sql)
     return result.fetchall()
 
@@ -42,7 +43,7 @@ def new_message(content: str, thread_id: int):
 
 def new_thread(content: str, topic: str, category_id: int):
     user_id = session.get("user_id", 0)
-    if not content or not topic or len(content) > 5100 or len(topic) > 100:
+    if not content or not topic or len(content) > 5100 or len(topic) > 110:
         return False
     if not category_id:
         return False
@@ -50,13 +51,28 @@ def new_thread(content: str, topic: str, category_id: int):
     sql = "INSERT INTO threads (topic, category_id, visible) \
         VALUES (:topic, :category, True)"
     db.session.execute(sql, {"topic":topic, "category":category_id})
-    
+
     sql = "SELECT MAX(id) FROM threads"
     thread_id = db.session.execute(sql).fetchone()[0]
 
     sql = "INSERT INTO messages (content, user_id, thread_id, first_in_thread, time, visible) \
         VALUES (:content, :user_id, :thread_id, TRUE, NOW(), True)"
     db.session.execute(sql, {"content":content, "user_id":user_id, "thread_id":thread_id})
+    db.session.commit()
+    return True
+
+def new_category(name: str, group: int):
+    if not name or not group:
+        return False
+    
+    sql = "INSERT INTO categories (category_name, visible) VALUES (:name, True)"
+    db.session.execute(sql, {"name":name})
+
+    sql = "SELECT MAX(id) FROM categories"
+    cat_id = db.session.execute(sql).fetchone()[0]
+
+    sql = "INSERT INTO category_access (category_id, group_id, visible) VALUES (:cat_id, :group_id, True)"
+    db.session.execute(sql, {"cat_id":cat_id, "group_id":group})
     db.session.commit()
     return True
 

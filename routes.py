@@ -20,6 +20,20 @@ def category(id):
 
     return render_template("category.html", threads=threads, cat_id=id, cat_name=name)
 
+@app.route("/new_category", methods=["POST"])
+def new_category():
+    if not session["csrf_token"] == request.form["csrf_token"]:
+        abort(403)
+    name = request.form["category_name"]
+    group = request.form["group"]
+
+    category_added = messages.new_category(name, group)
+
+    if not category_added:
+        render_template("error.html", message="Nimi tai käyttäjäryhmän valinta puuttuu")
+    
+    return index()
+
 @app.route("/thread/<int:id>")
 def thread(id):
     header_data = messages.get_header_data(id)
@@ -37,8 +51,7 @@ def new_message():
     message_posted = messages.new_message(content, thread_id)
 
     if not message_posted:
-        pass
-        # TODO: show error message
+        render_template("error.html", message="Viestin lähetys epäonnistui. Viestin tulee olla 1-5000 merkkiä pitkä")
 
     return redirect("/thread/"+str(thread_id))
 
@@ -53,8 +66,7 @@ def new_thread():
     thread_posted = messages.new_thread(content, topic, category_id)
 
     if not thread_posted:
-        pass
-        # TODO: show error message
+        render_template("error.html", message="Ketjun luominen ei onnistunut. Otsikon tulee olla 1-100 merkkiä ja viestin 1-5000 merkkiä pitkä.")
 
     return redirect("/category/"+str(category_id))
 

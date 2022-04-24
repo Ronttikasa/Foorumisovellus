@@ -8,9 +8,27 @@
     {% if session.username %}
         <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
         {% for category in categories %}
-            <a href="/category/{{ category.id }}">{{ category.category_name }}</a><br>
-            <hr>
+            {% if category.group_id == session.role %}
+                <a href="/category/{{ category.id }}">{{ category.category_name }}</a><br>
+                <hr>
+            {% endif %}
         {% endfor %}
+
+        {% if session.role == 1 %}
+            <form action="/new_category" method="POST">
+                <p>Luo uusi alue</p>
+                <p>Alueen nimi:
+                    <input type="text" name="category_name" required maxlength="100"></p>
+                <p>Näkyvyys:
+                    <select name="group">
+                        <option value="1"> Ylläpito </option>
+                        <option value="2"> Kaikki käyttäjät </option>
+                    </select>
+                </p>
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <input type="submit" value="Luo">
+            </form>
+        {% endif %}
 
     {% else %}
         <h1>Tervetuloa</h1>
