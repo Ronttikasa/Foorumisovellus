@@ -56,3 +56,23 @@ def check_credentials(username, password, password_again):
     if not message:
         return True, None
     return False, message
+
+def get_groups():
+    sql = "SELECT id, group_name FROM groups WHERE visible=True"
+    result = db.session.commit(sql).fetchall()
+    return result
+
+def user_in_groups(user_id):
+    sql = "SELECT group_id FROM users_in_groups WHERE user_id=:user_id AND visible=True"
+    result = db.session.execute(sql, {"user_id": user_id}).fetchall()
+    return result
+
+def is_admin():
+    user_id = session.get("user_id", 0)
+    sql = "SELECT user_id FROM users_in_groups WHERE group_id=1 AND user_id=:user_id"
+    result = db.session.execute(sql, {"user_id": user_id})
+    result = result.fetchone()
+
+    if not result:
+        return False
+    return True

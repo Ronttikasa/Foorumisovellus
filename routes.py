@@ -1,5 +1,4 @@
 from app import app
-from db import db
 from flask import render_template, request, redirect, session, abort
 import users
 import messages
@@ -7,9 +6,21 @@ import messages
 
 @app.route("/")
 def index():
-    categories = messages.get_categories()
+    if session.get("username"):
+        group_permissions = users.user_in_groups(session["user_id"])
+        groups = []
+        categories = []
+        for group in group_permissions:
+            groups.append(group[0])
+            allowed = messages.get_categories_by_group(group.group_id)
+            for category in allowed:
+                if category not in categories:
+                    categories.append(category)
+    else:
+        categories=[]
+        groups=[]
+    return render_template("index.html", categories=categories, groups=groups)
 
-    return render_template("index.html", categories=categories)
 
 @app.route("/category/<int:id>")
 def category(id):

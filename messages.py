@@ -12,6 +12,12 @@ def get_category_name(category_id: int):
     result = db.session.execute(sql, {"id": category_id})
     return result.fetchone()[0]
 
+def get_categories_by_group(group_id):
+    sql = "SELECT C.id, C.category_name FROM category_access A, categories C \
+        WHERE A.group_id=:group_id AND A.visible=True AND C.visible=True AND A.category_id=C.id"
+    result = db.session.execute(sql, {"group_id":group_id}).fetchall()
+    return result
+
 def get_threads(category_id: int):
     sql = "SELECT id, topic FROM threads WHERE category_id=:id AND visible=True"
     result = db.session.execute(sql, {"id":category_id})
@@ -49,11 +55,8 @@ def new_thread(content: str, topic: str, category_id: int):
         return False
 
     sql = "INSERT INTO threads (topic, category_id, visible) \
-        VALUES (:topic, :category, True)"
-    db.session.execute(sql, {"topic":topic, "category":category_id})
-
-    sql = "SELECT MAX(id) FROM threads"
-    thread_id = db.session.execute(sql).fetchone()[0]
+        VALUES (:topic, :category, True) RETURNING id"
+    thread_id = db.session.execute(sql, {"topic":topic, "category":category_id}).fetchone()[0]
 
     sql = "INSERT INTO messages (content, user_id, thread_id, first_in_thread, time, visible) \
         VALUES (:content, :user_id, :thread_id, TRUE, NOW(), True)"
@@ -65,11 +68,8 @@ def new_category(name: str, group: int):
     if not name or not group:
         return False
     
-    sql = "INSERT INTO categories (category_name, visible) VALUES (:name, True)"
-    db.session.execute(sql, {"name":name})
-
-    sql = "SELECT MAX(id) FROM categories"
-    cat_id = db.session.execute(sql).fetchone()[0]
+    sql = "INSERT INTO categories (category_name, visible) VALUES (:name, True) RETURNING id"
+    cat_id = db.session.execute(sql, {"name":name}).fetchone()[0]
 
     sql = "INSERT INTO category_access (category_id, group_id, visible) VALUES (:cat_id, :group_id, True)"
     db.session.execute(sql, {"cat_id":cat_id, "group_id":group})

@@ -8,13 +8,11 @@
     {% if session.username %}
         <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
         {% for category in categories %}
-            {% if category.group_id >= session.role %}
-                <a href="/category/{{ category.id }}">{{ category.category_name }}</a><br>
-                <hr>
-            {% endif %}
+            <a href="/category/{{ category.id }}">{{ category.category_name }}</a><br>
+            <hr>
         {% endfor %}
 
-        {% if session.role == 1 %}
+        {% if 1 in groups %}
             <form action="/new_category" method="POST">
                 <p>Luo uusi alue</p>
                 <p>Alueen nimi:
