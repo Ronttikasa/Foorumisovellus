@@ -12,11 +12,20 @@ def get_category_name(category_id: int):
     result = db.session.execute(sql, {"id": category_id})
     return result.fetchone()[0]
 
-def get_categories_by_group(group_id):
+def get_categories_by_group(group_id: int):
     sql = "SELECT C.id, C.category_name FROM category_access A, categories C \
         WHERE A.group_id=:group_id AND A.visible=True AND C.visible=True AND A.category_id=C.id"
     result = db.session.execute(sql, {"group_id":group_id}).fetchall()
     return result
+
+def category_allowed(group_ids: list, category_id: int):
+    for group_id in group_ids:
+        sql = "SELECT 1 FROM category_access WHERE group_id=:group_id AND category_id=:category_id"
+        result = db.session.execute(sql, {"group_id":group_id, "category_id":category_id})
+        if result.fetchone():
+            return True
+        continue
+    return False
 
 def get_threads(category_id: int):
     sql = "SELECT id, topic FROM threads WHERE category_id=:id AND visible=True"

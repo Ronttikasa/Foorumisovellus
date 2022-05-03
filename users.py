@@ -4,9 +4,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from secrets import token_hex
 from sqlalchemy.exc import IntegrityError
 
-def login(username, password):
-    sql = "SELECT U.id, U.password, G.group_id FROM users U, users_in_groups G \
-        WHERE U.username=:name AND U.id=G.user_id ORDER BY G.group_id ASC LIMIT 1"
+def login(username: str, password: str):
+    sql = "SELECT id, password FROM users \
+        WHERE username=:name AND visible=True"
     result = db.session.execute(sql, {"name": username})
     user = result.fetchone()
 
@@ -17,7 +17,6 @@ def login(username, password):
 
     session["username"] = username
     session["user_id"] = user[0]
-    session["role"] = user[2]
     session["csrf_token"] = token_hex(16)
 
     return True
@@ -25,10 +24,9 @@ def login(username, password):
 def logout():
     del session["username"]
     del session["user_id"]
-    del session["role"]
     del session["csrf_token"]
 
-def register(username, password):
+def register(username: str, password: str):
     try:
         password_hash = generate_password_hash(password)
         sql = "INSERT INTO users (username, password, visible) \
@@ -45,7 +43,7 @@ def register(username, password):
         return False
     return True
 
-def check_credentials(username, password, password_again):
+def check_credentials(username: str, password: str, password_again: str):
     message = ""
     if not username or len(username) > 20:
         message += "Käyttäjätunnuksessa tulee olla 1-20 merkkiä. "
@@ -62,10 +60,13 @@ def get_groups():
     result = db.session.commit(sql).fetchall()
     return result
 
-def user_in_groups(user_id):
+def user_in_groups(user_id: int):
     sql = "SELECT group_id FROM users_in_groups WHERE user_id=:user_id AND visible=True"
     result = db.session.execute(sql, {"user_id": user_id}).fetchall()
-    return result
+    groups = []
+    for r in result:
+        groups.append(r.group_id)
+    return groups
 
 def is_admin():
     user_id = session.get("user_id", 0)

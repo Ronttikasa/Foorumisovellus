@@ -7,27 +7,31 @@ import messages
 @app.route("/")
 def index():
     if session.get("username"):
-        group_permissions = users.user_in_groups(session["user_id"])
-        groups = []
         categories = []
-        for group in group_permissions:
-            groups.append(group[0])
-            allowed = messages.get_categories_by_group(group.group_id)
+
+        group_permissions = users.user_in_groups(session["user_id"])
+        
+        for group_id in group_permissions:
+            allowed = messages.get_categories_by_group(group_id)
             for category in allowed:
                 if category not in categories:
                     categories.append(category)
     else:
-        categories=[]
-        groups=[]
-    return render_template("index.html", categories=categories, groups=groups)
+        return render_template("index.html")
 
+    return render_template("index.html", categories=categories, groups=group_permissions)
 
 @app.route("/category/<int:id>")
 def category(id):
-    # TODO: check if user has the privilege to view category
-    
-    name = messages.get_category_name(id)
-    threads = messages.get_threads(id)
+    if session.get("username"):
+        group_permissions = users.user_in_groups(session["user_id"])
+        if not messages.category_allowed(group_permissions, id):
+            return render_template("error.html", message="Ei oikeutta katsella aluetta")
+        
+        name = messages.get_category_name(id)
+        threads = messages.get_threads(id)
+    else:
+        return index()
 
     return render_template("category.html", threads=threads, cat_id=id, cat_name=name)
 
@@ -47,8 +51,15 @@ def new_category():
 
 @app.route("/thread/<int:id>")
 def thread(id):
-    header_data = messages.get_header_data(id)
-    msgs = messages.get_messages(id)
+    if session.get("username"):
+        header_data = messages.get_header_data(id)
+        group_permissions = users.user_in_groups(session["user_id"])
+        if not messages.category_allowed(group_permissions, header_data.id):
+            return render_template("error.html", message="Ei oikeutta katsella viestiketjua")
+
+        msgs = messages.get_messages(id)
+    else:
+        return index()
 
     return render_template("thread.html", messages=msgs, thread_id=id, header_data=header_data)
 
