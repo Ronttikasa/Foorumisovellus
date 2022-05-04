@@ -5,22 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>GLC foorumi</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    {% if session.username %}
-        <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
-        {% block content %}{% endblock %}
-    {% else %}
-    <form action="/login" method="POST">
-        <p>Kirjaudu sisään:</p>
-        <p>Käyttäjänimi:<br>
-            <input type="text" name="username" required minlength="1"></p>
-        <p>Salasana:<br>
-            <input type="password" name="password" required minlength="1">
-            <input type="submit" value="Kirjaudu"></p>
-    </form>
-    Tai <a href="/register">luo uusi tunnus</a>
-    {% endif %}
+    <div class="header">
+        <div class="container">
+            <h1>GLC-foorumi</h1>
+            {% if session.username %}
+                <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
+        </div>
+    </div>
+    <div class="nav">
+        <div class="container">
+            {% block navigation %}{% endblock %}
+        </div>
+    </div>
+    <div class="content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    <div class="new">
+        <div class="container">
+            {% block add_new %}{% endblock %}
+        </div>
+    </div>
+            {% else %}
+                <h3>Kirjaudu sisään</h3>
+                <form action="/login" method="POST">
+                <div class="form-group col-4">
+                    <label for="username">Käyttäjänimi:</label>
+                    <input type="text" class="form-control" name="username" required minlength="1">
+                </div>
+                <div class="form-group col-4">
+                    <label for="password">Salasana:</label>
+                        <input type="password" class="form-control" name="password" required minlength="1">
+                </div>
+                <div class="form-group col-4">
+                    <button type="submit" class="btn btn-light">Kirjaudu</button>
+                </div>
+                </form>
+                Tai <a href="/register">luo uusi tunnus</a>
+            {% endif %}
+        </div>
+    </div>
 
 </body>
 </html>

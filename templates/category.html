@@ -1,13 +1,18 @@
 {% extends "layout.html" %}
 
-{% block content %}
+{% block navigation %}
     <p><a href="/">Etusivu</a></p>
+{% endblock %}
+
+{% block content %}
     <h2>{{ cat_name }}</h2>
     {% for thread in threads %}
-        <a href="/thread/{{ thread.id }}">{{ thread.topic }}</a><br>
+        <p><a href="/thread/{{ thread.id }}">{{ thread.topic }}</a></p>
         <hr>
     {% endfor %}
+{% endblock %}
 
+{% block add_new %}
     <form action="/new_thread" method="POST">
         <p>Uusi keskustelu:</p>
         <p>Aihe: <input type="text" name="topic" required maxlength="100"></p>

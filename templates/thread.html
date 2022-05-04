@@ -1,14 +1,16 @@
 {% extends "layout.html" %}
 
-{% block content %}
+{% block navigation %}
     <p><a href="/">Etusivu</a> | <a href="/category/{{ header_data.id }}">{{ header_data.category_name }}</a></p>
+{% endblock %}
 
+{% block content %}    
     <h2>{{ header_data.topic }}</h2>
 
     {% for message in messages %}
-        Lähettäjä: {{ message.username }} <br>
+        <p>Lähettäjä: {{ message.username }} <br>
         {{ message.content }} <br> 
-        {{ message.time.strftime("%Y-%m-%d %H:%M:%S") }}
+        {{ message.time.strftime("%Y-%m-%d %H:%M:%S") }}<br>
         {% if (session.user_id == message.user_id or admin) and not message.first_in_thread %}
             <form action="/delete" method="POST">
                 <input type="submit" value="poista viesti">
@@ -26,9 +28,12 @@
                 <input type="hidden" name="cat_id" value="{{ header_data.id }}"> 
             </form>
         {% endif %}
+        </p>
         <hr>
     {% endfor %}
+{% endblock %}
 
+{% block add_new %}
     <form action="/new_message" method="POST">
         <p>Uusi viesti:</p>
         <textarea name="content" rows="5" cols="60" required maxlength="5000"></textarea>

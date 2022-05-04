@@ -1,11 +1,13 @@
 {% extends "layout.html" %}
 
 {% block content %}
+    <h2>Huoneet</h2>
     {% for category in categories %}
-        <a href="/category/{{ category.id }}">{{ category.category_name }}</a><br>
-        <hr>
+        <p><a href="/category/{{ category.id }}">{{ category.category_name }}</a></p>
     {% endfor %}
+{% endblock %}
 
+{% block add_new %}
     {% if 1 in groups %}
         <form action="/new_category" method="POST">
             <p>Luo uusi alue</p>
