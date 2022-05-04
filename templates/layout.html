@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GLC foorumi</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+    {% if session.username %}
+        <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
+        {% block content %}{% endblock %}
+    {% else %}
+    <form action="/login" method="POST">
+        <p>Kirjaudu sisään:</p>
+        <p>Käyttäjänimi:<br>
+            <input type="text" name="username" required minlength="1"></p>
+        <p>Salasana:<br>
+            <input type="password" name="password" required minlength="1">
+            <input type="submit" value="Kirjaudu"></p>
+    </form>
+    Tai <a href="/register">luo uusi tunnus</a>
+    {% endif %}
+
+</body>
+</html>

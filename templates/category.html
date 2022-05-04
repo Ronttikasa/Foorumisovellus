@@ -1,39 +1,20 @@
-<!DOCTYPE html>
-<html lang="fi">
-<head>
-    <meta charset="UTF-8">
-    <title>GLC foorumi</title>
-</head>
-<body>
-    {% if session.username %}
-        <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
-        <p><a href="/">Etusivu</a></p>
-        <h2>{{ cat_name }}</h2>
-        {% for thread in threads %}
-            <a href="/thread/{{ thread.id }}">{{ thread.topic }}</a><br>
-            <hr>
-        {% endfor %}
+{% extends "layout.html" %}
 
-        <form action="/new_thread" method="POST">
-            <p>Uusi keskustelu:</p>
-            <p>Aihe: <input type="text" name="topic" required maxlength="100"></p>
-            <p>Viesti: <textarea name="content" rows="5" cols="60" required maxlength="5000"></textarea></p>
-            <input type="submit" value="Lähetä">
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-            <input type="hidden" name="category_id" value="{{ cat_id }}">
-        </form>
+{% block content %}
+    <p><a href="/">Etusivu</a></p>
+    <h2>{{ cat_name }}</h2>
+    {% for thread in threads %}
+        <a href="/thread/{{ thread.id }}">{{ thread.topic }}</a><br>
+        <hr>
+    {% endfor %}
+
+    <form action="/new_thread" method="POST">
+        <p>Uusi keskustelu:</p>
+        <p>Aihe: <input type="text" name="topic" required maxlength="100"></p>
+        <p>Viesti: <textarea name="content" rows="5" cols="60" required maxlength="5000"></textarea></p>
+        <input type="submit" value="Lähetä">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="hidden" name="category_id" value="{{ cat_id }}">
+    </form>
     
-    {% else %}
-        <h1>Tervetuloa</h1>
-        <form action="/login" method="POST">
-            <p>Kirjaudu sisään:</p>
-            <p>Käyttäjänimi:<br>
-                <input type="text" name="username" required minlength="1"></p>
-            <p>Salasana:<br>
-                <input type="password" name="password" required minlength="1">
-                <input type="submit" value="Kirjaudu"></p>
-        </form>
-        Tai <a href="/register">luo uusi tunnus</a>
-    {% endif %}
-</body>
-</html>
+{% endblock %}

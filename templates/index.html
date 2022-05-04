@@ -1,44 +1,25 @@
-<!DOCTYPE html>
-<html lang="fi">
-<head>
-    <meta charset="UTF-8">
-    <title>GLC foorumi</title>
-</head>
-<body>
-    {% if session.username %}
-        <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
-        {% for category in categories %}
-            <a href="/category/{{ category.id }}">{{ category.category_name }}</a><br>
-            <hr>
-        {% endfor %}
+{% extends "layout.html" %}
 
-        {% if 1 in groups %}
-            <form action="/new_category" method="POST">
-                <p>Luo uusi alue</p>
-                <p>Alueen nimi:
-                    <input type="text" name="category_name" required maxlength="100"></p>
-                <p>Näkyvyys:
-                    <select name="group">
-                        <option value="1"> Ylläpito </option>
-                        <option value="2"> Kaikki käyttäjät </option>
-                    </select>
-                </p>
-                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                <input type="submit" value="Luo">
-            </form>
-        {% endif %}
+{% block content %}
+    {% for category in categories %}
+        <a href="/category/{{ category.id }}">{{ category.category_name }}</a><br>
+        <hr>
+    {% endfor %}
 
-    {% else %}
-        <h1>Tervetuloa</h1>
-        <form action="/login" method="POST">
-            <p>Kirjaudu sisään:</p>
-            <p>Käyttäjänimi:<br>
-                <input type="text" name="username" required minlength="1"></p>
-            <p>Salasana:<br>
-                <input type="password" name="password" required minlength="1">
-                <input type="submit" value="Kirjaudu"></p>
+    {% if 1 in groups %}
+        <form action="/new_category" method="POST">
+            <p>Luo uusi alue</p>
+            <p>Alueen nimi:
+                <input type="text" name="category_name" required maxlength="100"></p>
+            <p>Näkyvyys:
+                <select name="group">
+                    <option value="1"> Ylläpito </option>
+                    <option value="2"> Kaikki käyttäjät </option>
+                </select>
+            </p>
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <input type="submit" value="Luo">
         </form>
-        Tai <a href="/register">luo uusi tunnus</a>
     {% endif %}
-</body>
-</html>
+{% endblock %}
+        

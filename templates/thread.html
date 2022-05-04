@@ -1,61 +1,42 @@
-<!DOCTYPE html>
-<html lang="fi">
-<head>
-    <meta charset="UTF-8">
-    <title>GLC foorumi</title>
-</head>
-<body>
-    {% if session.username %}
-        <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
-        <p><a href="/">Etusivu</a> | <a href="/category/{{ header_data.id }}">{{ header_data.category_name }}</a></p>
+{% extends "layout.html" %}
 
-        <h2>{{ header_data.topic }}</h2>
+{% block content %}
+    <p><a href="/">Etusivu</a> | <a href="/category/{{ header_data.id }}">{{ header_data.category_name }}</a></p>
 
-        {% for message in messages %}
-            Lähettäjä: {{ message.username }} <br>
-            {{ message.content }} <br> 
-            {{ message.time.strftime("%Y-%m-%d %H:%M:%S") }}
-            {% if (session.user_id == message.user_id or admin) and not message.first_in_thread %}
-                <form action="/delete" method="POST">
-                    <input type="submit" value="poista viesti">
-                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                    <input type="hidden" name="msg_id" value="{{ message.id }}">
-                    <input type="hidden" name="user_id" value="{{ message.user_id }}">
-                    <input type="hidden" name="thread_id" value="{{ thread_id }}">
-                </form>
-            {% endif %}
-            {% if admin and message.first_in_thread %}
-                <form action="/delete_thread" method="POST">
-                    <input type="submit" value="poista ketju">
-                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                    <input type="hidden" name="thread_id" value="{{ thread_id }}">
-                    <input type="hidden" name="cat_id" value="{{ header_data.id }}"> 
-                </form>
-            {% endif %}
-            <hr>
-        {% endfor %}
-    
-        <form action="/new_message" method="POST">
-            <p>Uusi viesti:</p>
-            <textarea name="content" rows="5" cols="60" required maxlength="5000"></textarea>
-            <br>
-            <input type="submit" value="Lähetä">
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-            <input type="hidden" name="thread_id" value="{{ thread_id }}">
-            <input type="hidden" name="cat_id" value="{{ header_data.id }}">
-        </form>
+    <h2>{{ header_data.topic }}</h2>
 
-    {% else %}
-        <h1>Tervetuloa</h1>
-        <form action="/login" method="POST">
-            <p>Kirjaudu sisään:</p>
-            <p>Käyttäjänimi:<br>
-                <input type="text" name="username" required minlength="1"></p>
-            <p>Salasana:<br>
-                <input type="password" name="password" required minlength="1">
-                <input type="submit" value="Kirjaudu"></p>
-        </form>
-        Tai <a href="/register">luo uusi tunnus</a>
-    {% endif %}
-</body>
-</html>
+    {% for message in messages %}
+        Lähettäjä: {{ message.username }} <br>
+        {{ message.content }} <br> 
+        {{ message.time.strftime("%Y-%m-%d %H:%M:%S") }}
+        {% if (session.user_id == message.user_id or admin) and not message.first_in_thread %}
+            <form action="/delete" method="POST">
+                <input type="submit" value="poista viesti">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <input type="hidden" name="msg_id" value="{{ message.id }}">
+                <input type="hidden" name="user_id" value="{{ message.user_id }}">
+                <input type="hidden" name="thread_id" value="{{ thread_id }}">
+            </form>
+        {% endif %}
+        {% if admin and message.first_in_thread %}
+            <form action="/delete_thread" method="POST">
+                <input type="submit" value="poista ketju">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <input type="hidden" name="thread_id" value="{{ thread_id }}">
+                <input type="hidden" name="cat_id" value="{{ header_data.id }}"> 
+            </form>
+        {% endif %}
+        <hr>
+    {% endfor %}
+
+    <form action="/new_message" method="POST">
+        <p>Uusi viesti:</p>
+        <textarea name="content" rows="5" cols="60" required maxlength="5000"></textarea>
+        <br>
+        <input type="submit" value="Lähetä">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="hidden" name="thread_id" value="{{ thread_id }}">
+        <input type="hidden" name="cat_id" value="{{ header_data.id }}">
+    </form>
+
+{% endblock %}
