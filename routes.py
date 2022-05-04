@@ -9,7 +9,7 @@ def index():
     if session.get("username"):
         categories = []
 
-        group_permissions = users.user_in_groups(session["user_id"])
+        group_permissions = users.user_in_groups(session.get("user_id"))
         
         for group_id in group_permissions:
             allowed = messages.get_categories_by_group(group_id)
@@ -24,8 +24,7 @@ def index():
 @app.route("/category/<int:id>")
 def category(id):
     if session.get("username"):
-        group_permissions = users.user_in_groups(session["user_id"])
-        if not messages.category_allowed(group_permissions, id):
+        if not users.category_access(session.get("user_id"), id):
             return render_template("error.html", message="Ei oikeutta katsella aluetta")
         
         name = messages.get_category_name(id)
@@ -53,8 +52,9 @@ def new_category():
 def thread(id):
     if session.get("username"):
         header_data = messages.get_header_data(id)
-        group_permissions = users.user_in_groups(session["user_id"])
-        if not messages.category_allowed(group_permissions, header_data.id):
+        category_id = header_data.id
+        user_id = session.get("user_id")
+        if not users.category_access(user_id, category_id):
             return render_template("error.html", message="Ei oikeutta katsella viestiketjua")
 
         msgs = messages.get_messages(id)

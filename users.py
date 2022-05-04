@@ -71,9 +71,18 @@ def user_in_groups(user_id: int):
 def is_admin():
     user_id = session.get("user_id", 0)
     sql = "SELECT user_id FROM users_in_groups WHERE group_id=1 AND user_id=:user_id"
-    result = db.session.execute(sql, {"user_id": user_id})
-    result = result.fetchone()
+    result = db.session.execute(sql, {"user_id": user_id}).fetchone()
 
     if not result:
         return False
     return True
+
+def category_access(user_id: int, category_id: int):
+    groups = user_in_groups(user_id)
+    for group_id in groups:
+        sql = "SELECT 1 FROM category_access WHERE group_id=:group_id AND category_id=:category_id"
+        result = db.session.execute(sql, {"group_id":group_id, "category_id":category_id})
+        if result.fetchone():
+            return True
+        continue
+    return False
