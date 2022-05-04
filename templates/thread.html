@@ -42,6 +42,7 @@
             <input type="submit" value="Lähetä">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
             <input type="hidden" name="thread_id" value="{{ thread_id }}">
+            <input type="hidden" name="cat_id" value="{{ header_data.id }}">
         </form>
 
     {% else %}

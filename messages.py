@@ -50,9 +50,9 @@ def new_message(content: str, thread_id: int):
 def new_thread(content: str, topic: str, category_id: int):
     user_id = session.get("user_id", 0)
     if not content or not topic or len(content) > 5100 or len(topic) > 110:
-        return False
+        return False, None
     if not category_id:
-        return False
+        return False, None
 
     sql = "INSERT INTO threads (topic, category_id, visible) \
         VALUES (:topic, :category, True) RETURNING id"
@@ -62,7 +62,7 @@ def new_thread(content: str, topic: str, category_id: int):
         VALUES (:content, :user_id, :thread_id, TRUE, NOW(), True)"
     db.session.execute(sql, {"content":content, "user_id":user_id, "thread_id":thread_id})
     db.session.commit()
-    return True
+    return True, thread_id
 
 def new_category(name: str, group: int):
     if not name or not group:

@@ -87,13 +87,16 @@ def new_thread():
     topic = request.form["topic"]
     content = request.form["content"]
     category_id = request.form["category_id"]
+
+    if not users.category_access(session.get("user_id"), category_id):
+        return render_template("error.html", message="Ei oikeutta luoda ketjua tälle alueelle")
     
-    thread_posted = messages.new_thread(content, topic, category_id)
+    thread_posted, thread_id = messages.new_thread(content, topic, category_id)
 
     if not thread_posted:
-        render_template("error.html", message="Ketjun luominen ei onnistunut. Otsikon tulee olla 1-100 merkkiä ja viestin 1-5000 merkkiä pitkä.")
+        return render_template("error.html", message="Ketjun luominen ei onnistunut. Otsikon tulee olla 1-100 merkkiä ja viestin 1-5000 merkkiä pitkä.")
 
-    return redirect("/category/"+str(category_id))
+    return redirect("/thread/"+str(thread_id))
 
 @app.route("/delete", methods=["POST"])
 def delete_message():
