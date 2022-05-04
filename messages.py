@@ -25,7 +25,7 @@ def get_threads(category_id: int):
 
 def get_header_data(thread_id: int):
     sql = "SELECT C.id, C.category_name, T.topic FROM threads T, categories C " \
-        "WHERE T.id=:id AND T.category_id=C.id LIMIT 1"
+        "WHERE T.id=:id AND T.category_id=C.id AND T.visible=True AND C.visible=True LIMIT 1"
     result = db.session.execute(sql, {"id":thread_id})
     return result.fetchone()
 

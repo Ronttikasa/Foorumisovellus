@@ -38,6 +38,8 @@ def category(id):
 def new_category():
     if not session["csrf_token"] == request.form["csrf_token"]:
         abort(403)
+    if not users.is_admin():
+        return render_template("error.html", message="Ei oikeutta luoda uutta aluetta")
     name = request.form["category_name"]
     group = request.form["group"]
 
@@ -52,8 +54,13 @@ def new_category():
 def thread(id):
     if session.get("username"):
         header_data = messages.get_header_data(id)
+
+        if not header_data:
+            return render_template("error.html", message="Ketjua ei löytynyt")
+
         category_id = header_data.id
         user_id = session.get("user_id")
+
         if not users.category_access(user_id, category_id):
             return render_template("error.html", message="Ei oikeutta katsella viestiketjua")
 
