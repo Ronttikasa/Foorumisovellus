@@ -82,6 +82,14 @@ def delete_message(msg_id: int):
     db.session.commit()
     return result.rowcount
 
+def delete_thread(thread_id: int):
+    sql = "UPDATE threads SET visible=False WHERE id=:id"
+    db.session.execute(sql, {"id":thread_id})
+    sql = "UPDATE messages SET visible=False WHERE thread_id=:id"
+    db.session.execute(sql, {"id":thread_id})
+    db.session.commit()
+
+
 def get_newest_message_category(category_id: int):
     sql = "SELECT M.id, M.time FROM messages M, threads T \
         WHERE T.category_id=:category_id ORDER BY M.id DESC LIMIT 1"

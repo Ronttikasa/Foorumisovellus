@@ -71,9 +71,9 @@ def user_in_groups(user_id: int):
 def is_admin():
     user_id = session.get("user_id", 0)
     sql = "SELECT user_id FROM users_in_groups WHERE group_id=1 AND user_id=:user_id"
-    result = db.session.execute(sql, {"user_id": user_id}).fetchone()
+    result = db.session.execute(sql, {"user_id": user_id})
 
-    if not result:
+    if not result.fetchone():
         return False
     return True
 

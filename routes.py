@@ -58,15 +58,18 @@ def thread(id):
             return render_template("error.html", message="Ei oikeutta katsella viestiketjua")
 
         msgs = messages.get_messages(id)
+        is_admin = users.is_admin()
     else:
         return index()
 
-    return render_template("thread.html", messages=msgs, thread_id=id, header_data=header_data)
+    return render_template("thread.html", messages=msgs, thread_id=id, header_data=header_data, admin=is_admin)
 
 @app.route("/new_message", methods=["POST"])
 def new_message():
     if not session["csrf_token"] == request.form["csrf_token"]:
         abort(403)
+    if not users.category_access(session.get("user_id"), request.form["cat_id"]):
+        return render_template("error.html", message="Ei oikeutta kirjoittaa tähän ketjuun")
     content = request.form["content"]
     thread_id = request.form["thread_id"]
 
@@ -101,7 +104,7 @@ def delete_message():
     user_id = int(request.form["user_id"])
     thread_id = request.form["thread_id"]
 
-    if session["user_id"] == user_id:
+    if session["user_id"] == user_id or users.is_admin():
         msg_deleted = messages.delete_message(message_id)
 
     if not msg_deleted:
@@ -110,7 +113,18 @@ def delete_message():
 
     return redirect("/thread/"+str(thread_id))
 
+@app.route("/delete_thread", methods=["POST"])
+def delete_thread():
+    if not session["csrf_token"] == request.form["csrf_token"]:
+        abort(403)
 
+    thread_id = request.form["thread_id"]
+    category_id = request.form["cat_id"]
+
+    if users.is_admin():
+        messages.delete_thread(thread_id)
+
+    return redirect("/category/"+str(category_id))
 
 @app.route("/register", methods=["POST", "GET"])
 def register():

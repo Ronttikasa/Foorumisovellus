@@ -15,12 +15,21 @@
             Lähettäjä: {{ message.username }} <br>
             {{ message.content }} <br> 
             {{ message.time.strftime("%Y-%m-%d %H:%M:%S") }}
-            {% if session.user_id == message.user_id and not message.first_in_thread %}
-                <form action="/delete" method="POST"><input type="submit" value="poista viesti">
+            {% if (session.user_id == message.user_id or admin) and not message.first_in_thread %}
+                <form action="/delete" method="POST">
+                    <input type="submit" value="poista viesti">
                     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                     <input type="hidden" name="msg_id" value="{{ message.id }}">
                     <input type="hidden" name="user_id" value="{{ message.user_id }}">
                     <input type="hidden" name="thread_id" value="{{ thread_id }}">
+                </form>
+            {% endif %}
+            {% if admin and message.first_in_thread %}
+                <form action="/delete_thread" method="POST">
+                    <input type="submit" value="poista ketju">
+                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                    <input type="hidden" name="thread_id" value="{{ thread_id }}">
+                    <input type="hidden" name="cat_id" value="{{ header_data.id }}"> 
                 </form>
             {% endif %}
             <hr>
