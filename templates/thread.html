@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
+{% block header %}
+    <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
+{% endblock %}
+    
 {% block navigation %}
     <p><a href="/">Etusivu</a> | <a href="/category/{{ header_data.id }}">{{ header_data.category_name }}</a></p>
 {% endblock %}

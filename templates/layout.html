@@ -11,8 +11,7 @@
     <div class="header">
         <div class="container">
             <h1>GLC-foorumi</h1>
-            {% if session.username %}
-                <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
+                {% block header %}{% endblock %}   
         </div>
     </div>
     <div class="nav">
@@ -30,25 +29,8 @@
             {% block add_new %}{% endblock %}
         </div>
     </div>
-            {% else %}
-                <h3>Kirjaudu sisään</h3>
-                <form action="/login" method="POST">
-                <div class="form-group col-4">
-                    <label for="username">Käyttäjänimi:</label>
-                    <input type="text" class="form-control" name="username" required minlength="1">
-                </div>
-                <div class="form-group col-4">
-                    <label for="password">Salasana:</label>
-                        <input type="password" class="form-control" name="password" required minlength="1">
-                </div>
-                <div class="form-group col-4">
-                    <button type="submit" class="btn btn-light">Kirjaudu</button>
-                </div>
-                </form>
-                Tai <a href="/register">luo uusi tunnus</a>
-            {% endif %}
+
         </div>
     </div>
-
 </body>
 </html>

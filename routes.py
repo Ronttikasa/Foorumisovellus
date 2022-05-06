@@ -30,7 +30,7 @@ def category(id):
         name = messages.get_category_name(id)
         threads = messages.get_threads(id)
     else:
-        return index()
+        return redirect("/")
 
     return render_template("category.html", threads=threads, cat_id=id, cat_name=name)
 
@@ -67,7 +67,7 @@ def thread(id):
         msgs = messages.get_messages(id)
         is_admin = users.is_admin()
     else:
-        return index()
+        return redirect("/")
 
     return render_template("thread.html", messages=msgs, thread_id=id, header_data=header_data, admin=is_admin)
 
