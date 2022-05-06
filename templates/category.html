@@ -42,14 +42,16 @@
 {% block add_new %}
 <div class="new_thread">
     <div class="container">
-    <form action="/new_thread" method="POST">
-        <p>Uusi keskustelu:</p>
-        <p>Aihe: <input type="text" name="topic" required maxlength="100"></p>
-        <p>Viesti: <textarea name="content" rows="5" cols="60" required maxlength="5000"></textarea></p>
-        <input type="submit" value="Lähetä">
-        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-        <input type="hidden" name="category_id" value="{{ cat_id }}">
-    </form>
+        <form action="/new_thread" method="POST">
+            <h3>Uusi keskustelu:</h3>
+            <p>Aihe:<br>
+                <input type="text" name="topic" required maxlength="100"></p>
+            <p>Viesti:<br>
+                <textarea name="content" rows="5" cols="60" required maxlength="5000"></textarea></p>
+            <input type="submit" value="Lähetä">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            <input type="hidden" name="category_id" value="{{ cat_id }}">
+        </form>
     </div>
 </div>
     

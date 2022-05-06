@@ -1,8 +1,16 @@
 .header {
     background: rgba(40, 37, 77, 0.788);
     color: rgb(241, 233, 233);
-    padding-top: 20px;
+    padding-top: 25px;
     padding-bottom: 15px;
+}
+
+input[type=submit] {
+    background-color: rgba(204, 201, 238, 0.788);
+    border: 0 none;
+    padding: 5px 15px;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 body {
@@ -13,12 +21,19 @@ body {
     color: rgb(174, 167, 255)
 }
 
-.message-box {
-    display: flex;
+.thread-title {
+    padding-top: 20px;
+    padding-bottom: 15px;
+    padding-left: 15px;
 }
 
-.delete-button {
-    align-self: flex-end;
+.message-box {
+    padding-bottom: 35px;
+}
+
+.message-container {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .category {
@@ -42,7 +57,7 @@ body {
     padding-top: 10px;
 }
 
-.new {
+.new_category {
     padding-top: 50px;
 }
 
