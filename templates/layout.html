@@ -9,29 +9,15 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="header">
-        <div class="container">
-            <h1>GLC-foorumi</h1>
-                {% block header %}{% endblock %}   
-        </div>
-    </div>
-    <div class="nav">
-        <div class="container">
-            {% block navigation %}{% endblock %}
-        </div>
-    </div>
-    <div class="content">
-        <div class="container">
-            {% block content %}{% endblock %}
-        </div>
-    </div>
-    <div class="new">
-        <div class="container">
-            {% block add_new %}{% endblock %}
-        </div>
-    </div>
+    
+    
+    {% block header %}{% endblock %}   
 
-        </div>
-    </div>
+    {% block navigation %}{% endblock %}
+
+    {% block content %}{% endblock %}
+
+    {% block add_new %}{% endblock %}
+
 </body>
 </html>

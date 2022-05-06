@@ -5,8 +5,20 @@
     padding-bottom: 15px;
 }
 
+body {
+    margin: auto;
+}
+
 .header a {
     color: rgb(174, 167, 255)
+}
+
+.message-box {
+    display: flex;
+}
+
+.delete-button {
+    align-self: flex-end;
 }
 
 .category {
