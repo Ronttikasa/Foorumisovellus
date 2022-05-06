@@ -5,7 +5,7 @@
 {% endblock %}
     
 {% block navigation %}
-    <p><a href="/">Etusivu</a> | <a href="/category/{{ header_data.id }}">{{ header_data.category_name }}</a></p>
+    <p><a href="/">Etusivu</a> > <a href="/category/{{ header_data.id }}">{{ header_data.category_name }}</a> > <a href="/thread/{{ thread_id }}">{{ header_data.topic }}</a></p>
 {% endblock %}
 
 {% block content %}    

@@ -22,6 +22,10 @@
     {% endif %}
 {% endblock %}
 
+{% block navigation %}
+    <p><a href="/">Etusivu</a></p>
+{% endblock %}
+
 {% block content %}
     {% if session.username %}
         {% for category in categories %}
