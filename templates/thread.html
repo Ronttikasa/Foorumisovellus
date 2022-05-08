@@ -1,13 +1,4 @@
 {% extends "layout.html" %}
-
-{% block header %}
-    <div class="header">
-        <div class="container">
-            <h1>GLC-foorumi</h1>
-            <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
-        </div>
-    </div>
-{% endblock %}
     
 {% block navigation %}
     <div class="nav">
@@ -66,13 +57,16 @@
 {% endblock %}
 
 {% block add_new %}
-<div class="new_message">
+<div class="new">
     <div class="container">
     <form action="/new_message" method="POST">
-        <p>Uusi viesti:</p>
-        <textarea name="content" rows="5" cols="60" required maxlength="5000"></textarea>
-        <br>
-        <input type="submit" value="Lähetä">
+        <div class="form-group col-6">
+            <label for="content">Uusi viesti:</label>
+            <textarea name="content" class="form-control" rows="5" required maxlength="5000"></textarea>
+            </div>
+        <div class="form-group col-6">
+            <button type="submit">Lähetä</button>
+        </div>
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         <input type="hidden" name="thread_id" value="{{ thread_id }}">
         <input type="hidden" name="cat_id" value="{{ header_data.id }}">

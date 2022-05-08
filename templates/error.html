@@ -1,8 +1,18 @@
-<!DOCTYPE html>
-<html lang="fi">
-<title>Tsoha foorumi</title>
-<body>
-    <p>Jotain meni vikaan. {{ message }}</p>
-    <p><a href="/">Palaa etusivulle</a></p>
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block navigation %}
+    <div class="nav">
+        <div class="container">
+            <a href="/">Etusivu</a> > Virhe
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="content">
+        <div class="container">
+            <p>Jotain meni vikaan. {{ message }}</p>
+            <p><a href="/">Palaa etusivulle</a></p>
+        </div>
+    </div>
+{% endblock %}

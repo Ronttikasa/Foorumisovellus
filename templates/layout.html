@@ -11,7 +11,14 @@
 <body>
     
     
-    {% block header %}{% endblock %}   
+    <div class="header">
+        <div class="container">
+            <h1>GLC-foorumi</h1>
+            {% if session.username %}
+                <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>   
+            {% endif %}
+        </div>
+    </div>
 
     {% block navigation %}{% endblock %}
 

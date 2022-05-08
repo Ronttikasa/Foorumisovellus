@@ -1,32 +1,5 @@
 {% extends "layout.html" %}
 
-{% block header %}
-    <div class="header">
-        <div class="container">
-            <h1>GLC-foorumi</h1>
-            {% if session.username %}
-                <p>Olet kirjautunut nimellä {{ session.username }} | <a href="/logout">Kirjaudu ulos</a></p>
-            {% else %}
-                <h3>Kirjaudu sisään</h3>
-                <form action="/login" method="POST">
-                <div class="form-group col-4">
-                    <label for="username">Käyttäjänimi:</label>
-                    <input type="text" class="form-control" name="username" required minlength="1">
-                </div>
-                <div class="form-group col-4">
-                    <label for="password">Salasana:</label>
-                        <input type="password" class="form-control" name="password" required minlength="1">
-                </div>
-                <div class="form-group col-4">
-                    <button type="submit" class="btn btn-light">Kirjaudu</button>
-                </div>
-                </form>
-                Tai <a href="/register">luo uusi tunnus</a>
-            {% endif %}
-        </div>
-    </div>
-{% endblock %}
-
 {% block navigation %}
     <div class="nav">
         <div class="container">
@@ -55,27 +28,52 @@
                 {% endfor %}
             </div>
         </div>
+    {% else %}
+        <div class="login">
+            <div class="container">
+                <h3>Kirjaudu sisään</h3>
+                <form action="/login" method="POST">
+                <div class="form-group col-4">
+                    <label for="username">Käyttäjänimi:</label>
+                    <input type="text" class="form-control" name="username" required minlength="1">
+                </div>
+                <div class="form-group col-4">
+                    <label for="password">Salasana:</label>
+                        <input type="password" class="form-control" name="password" required minlength="1">
+                </div>
+                <div class="form-group col-4">
+                    <button type="submit">Kirjaudu</button>
+                </div>
+                </form>
+                Tai <a href="/register">luo uusi tunnus</a>
+        </div>
+    </div>
     {% endif %}    
 {% endblock %}
 
 {% block add_new %}
     {% if 1 in groups %}
-    <div class="new_category">
-        <div class="container">
-            <form action="/new_category" method="POST">
-                <h3>Luo uusi alue</h3>
-                <p>Alueen nimi:<br>
-                    <input type="text" name="category_name" required maxlength="100"></p>
-                <p>Näkyvyys:<br>
-                    <select name="group">
-                        <option value="1"> Ylläpito </option>
-                        <option value="2"> Kaikki käyttäjät </option>
-                    </select>
-                </p>
-                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                <input type="submit" value="Luo">
-            </form>
+        <div class="new">
+            <div class="container">
+                <form action="/new_category" method="POST">
+                    <h3>Luo uusi alue</h3>
+                    <div class="form-group col-6" style="padding-top:15px">
+                        <label for="category_name">Alueen nimi:</label>
+                        <input type="text" class="form-control" name="category_name" required maxlength="100">
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="group">Näkyvyys:</label>
+                        <select name="group" class="form-control">
+                            <option value="1"> Ylläpito </option>
+                            <option value="2"> Kaikki käyttäjät </option>
+                        </select>
+                        </div>
+                    <div class="form-group col-6">
+                        <button type="submit">Luo</button>
+                    </div>
+                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                </form>
+            </div>
         </div>
-    </div>
     {% endif %}
 {% endblock %}

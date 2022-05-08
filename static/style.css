@@ -13,8 +13,20 @@ input[type=submit] {
     border-radius: 5px;
 }
 
+button[type=submit] {
+    background-color: rgba(204, 201, 238, 0.788);
+    border: 0 none;
+    padding: 5px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
 body {
     margin: auto;
+}
+
+.login {
+    padding-top: 40px;
 }
 
 .header a {
@@ -54,10 +66,10 @@ body {
 }
 
 .content {
-    padding-top: 10px;
+    padding-top: 25px;
 }
 
-.new_category {
+.new {
     padding-top: 50px;
 }
 
