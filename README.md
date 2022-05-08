@@ -42,6 +42,11 @@ secrets.token_hex(16)
 - Alusta tietokanta komennolla `psql DATABASE_NAME < schema.sql`
 - Käynnistä sovellus komennolla `flask run`
 
+### Admin-käyttäjän luominen
+
+Rekisteröi käyttäjä normaalisti ja lisää sen jälkeen manuaalisesti tietokannan
+`users_in_groups`-tauluun käyttäjän id sekä adminryhmän id (oletusarvoisesti 1).
+
 
 ## Jatkokehitysideoita
 

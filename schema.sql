@@ -54,6 +54,9 @@ CREATE TABLE category_access (
     visible BOOLEAN NOT NULL
 );
 
+-- This bit creates the admin and basic user groups with IDs 1 and 2 respectively
+-- as well as a category for testing.
+
 INSERT INTO categories (category_name, visible) VALUES ('Testialue', TRUE);
 INSERT INTO groups (group_name, visible) VALUES ('admin', TRUE);
 INSERT INTO groups (group_name, visible) VALUES ('käyttäjä', TRUE);
