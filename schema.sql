@@ -55,3 +55,7 @@ CREATE TABLE category_access (
 );
 
 INSERT INTO categories (category_name, visible) VALUES ('Testialue', TRUE);
+INSERT INTO groups (group_name, visible) VALUES ('admin', TRUE);
+INSERT INTO groups (group_name, visible) VALUES ('käyttäjä', TRUE);
+INSERT INTO category_access (category_id, group_id, visible) VALUES (1, 1, TRUE);
+INSERT INTO category_access (category_id, group_id, visible) VALUES (1, 2, TRUE);
